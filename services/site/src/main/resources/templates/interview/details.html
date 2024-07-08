@@ -76,12 +76,14 @@
                  <i class="far fa-clock"></i>
                  <span th:text="${#strings.substring(interview.createDate, 0, 10)}"></span>
                  <i class="far fa-user"></i>
-                 <span>ФИО Автора</span>
+                 <span th:if="${profileAuthor != null}"
+                       th:text="${profileAuthor.username}">
+                 </span>
                 <span th:if="${userInfo != null}">
                  <span class="fw-bold" th:text=${userInfo.username}></span>
                 </span>
                  <span th:text="${'Ориентировочная дата: ' + interview.approximateDate}"></span>
-                </span>
+            </span>
         </div>
         <div class="card-body">
             <div>
