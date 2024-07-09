@@ -3,17 +3,20 @@ package ru.job4j.site.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.job4j.site.dto.CategoryDTO;
-import ru.job4j.site.dto.TopicDTO;
-import ru.job4j.site.dto.TopicLiteDTO;
-import ru.job4j.site.dto.TopicIdNameDTO;
+import ru.job4j.site.domain.StatusInterview;
+import ru.job4j.site.dto.*;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
+@AllArgsConstructor
 public class TopicsService {
+    private InterviewsService interviewsService;
 
     public List<TopicDTO> getByCategory(int id) throws JsonProcessingException {
         var text = new RestAuthCall("http://localhost:9902/topics/" + id).get();
@@ -77,5 +80,14 @@ public class TopicsService {
         var mapper = new ObjectMapper();
         return mapper.readValue(text, new TypeReference<>() {
         });
+    }
+
+    public Map<Integer, Integer> getCountTopicIdByStatus(int status) throws JsonProcessingException {
+        List<InterviewDTO> newInterviews = interviewsService.getByStatus(status);
+        Map<Integer, Integer> countByTopicId = new HashMap<>();
+        for (InterviewDTO interviewDTO : newInterviews) {
+            countByTopicId.merge(interviewDTO.getTopicId(), 1, Integer::sum);
+        }
+        return countByTopicId;
     }
 }

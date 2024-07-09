@@ -64,4 +64,11 @@ public class InterviewsController {
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(interviewService.findByTopicsIds(topicIds, page, size));
     }
+
+    @GetMapping("/findByStatus/{status}")
+    public ResponseEntity<List<Interview>> findByStatus(@PathVariable int status) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(interviewService.findByStatus(status));
+    }
 }

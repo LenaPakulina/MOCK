@@ -5,9 +5,15 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.job4j.site.domain.StatusInterview;
 import ru.job4j.site.dto.CategoryDTO;
+import ru.job4j.site.dto.InterviewDTO;
+import ru.job4j.site.dto.TopicDTO;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @AllArgsConstructor
 @Service
@@ -76,5 +82,22 @@ public class CategoriesService {
             }
         }
         return result;
+    }
+
+    public Map<Integer, Integer> getCountCategoryIdByStatus(int status) throws JsonProcessingException {
+        Map<Integer, Integer> countByTopicId = topicsService.getCountTopicIdByStatus(status);
+        Map<Integer, Integer> categoriesTopicSizeWithStatus = new HashMap<>();
+        var categoriesDTO = getAll();
+        for (var categoryDTO : categoriesDTO) {
+            List<TopicDTO> allTopicsByCategory = topicsService.getByCategory(categoryDTO.getId());
+            for (var topicDTO : allTopicsByCategory) {
+                categoriesTopicSizeWithStatus.merge(
+                        categoryDTO.getId(),
+                        countByTopicId.getOrDefault(topicDTO.getId(), 0),
+                        Integer::sum
+                );
+            }
+        }
+        return categoriesTopicSizeWithStatus;
     }
 }

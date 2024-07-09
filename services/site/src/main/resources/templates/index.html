@@ -108,7 +108,9 @@
                                 </small>
                             </td>
                             <td>
-                                <span class="badge bg-success">Новых: 100</span>
+                                <span th:if="${categoriesIdCountWithNewStatus.containsKey(category.id)}" class="badge bg-success">
+                                    Новых: <span th:text="${categoriesIdCountWithNewStatus.get(category.id)}">0</span>
+                                </span>
                             </td>
                         </tr>
                         </tbody>

@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import ru.job4j.site.domain.StatusInterview;
 import ru.job4j.site.service.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,6 +30,8 @@ public class IndexController {
         );
         try {
             model.addAttribute("categories", categoriesService.getMostPopular());
+            model.addAttribute("categoriesIdCountWithNewStatus",
+                    categoriesService.getCountCategoryIdByStatus(StatusInterview.IS_NEW.getId()));
             var token = getToken(req);
             if (token != null) {
                 var userInfo = authService.userInfo(token);
